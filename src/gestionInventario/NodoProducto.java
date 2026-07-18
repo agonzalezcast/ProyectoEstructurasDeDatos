@@ -1,5 +1,4 @@
 package gestionInventario;
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class NodoProducto {
@@ -78,6 +77,8 @@ public class NodoProducto {
         this.listaImagenes = new ArrayList<>();
         this.siguiente = null;
     }
+
+
 
     public void agregarImagen(String ruta) {
         listaImagenes.add(ruta);
