@@ -10,11 +10,11 @@ public class ColaClientes {
         cantidad = 0;
     }
 
-    private boolean estaVacia() {
+    public boolean estaVacia() {
         return cantidad == 0;
     }
 
-    private boolean estaLlena(){
+    public boolean estaLlena(){
         return cantidad == elementos.length;
     }
 

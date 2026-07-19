@@ -48,24 +48,25 @@ public class ArbolProductos {
         else padreTemp.setIzq(nodo);
     }
 
-    public NodoArbol buscar(String nombreProducto){
-        if(estaVacio()){
+    public NodoArbol buscar(String nombreProducto) {
+        if (estaVacio()) {
             System.out.println("El inventario está vacío.\n");
             return null;
         }
-
         NodoArbol temp = raiz;
-
-        while (temp!=null && temp.getProducto().getNombre().compareToIgnoreCase(nombreProducto) != 0){
-            if(temp.getProducto().getNombre().compareToIgnoreCase(nombreProducto) < 0) temp = temp.getDer();
-            else temp = temp.getIzq();
+        while (temp != null) {
+            int comparacion = temp.getProducto().getNombre().compareToIgnoreCase(nombreProducto);
+            if (comparacion == 0) {
+                return temp;
+            }
+            if (comparacion < 0) {
+                temp = temp.getDer();
+            } else {
+                temp = temp.getIzq();
+            }
         }
-        if(temp.getProducto().getNombre().compareToIgnoreCase(nombreProducto) == 0){
-            return temp;
-        }else{
-            System.out.println("El producto buscado no está en el inventario.\n");
-            return null;
-        }
+        System.out.println("El producto buscado no está en el inventario.\n");
+        return null;
     }
 
     public NodoArbol buscarPadre(String nombreProducto){

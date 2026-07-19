@@ -1,97 +1,124 @@
-import gestionInventario.ListaProductos;
+import gestionInventario.Cliente;
 import gestionInventario.NodoProducto;
+import gestionInventario.Tienda;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public class Main {
 
-    public static ListaProductos aplicacion = new ListaProductos();
+    public static Tienda tienda = new Tienda();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
+        menu();
+    }
+
+    public static void menu() {
         int opcion;
-
         do {
             opcion = Integer.parseInt(JOptionPane.showInputDialog(
-                    "Sistema de Gestiones " + "\n" + "1. Cliente\n" + "2. Administrador\n" + "0. Salir"));
-
+                    "SISTEMA DE GESTIÓN DE INVENTARIOS\n\n" +
+                            "1. Agregar producto al inventario\n" +
+                            "2. Mostrar inventario\n" +
+                            "3. Registrar cliente y llenar carrito\n" +
+                            "4. Atender siguiente cliente\n" +
+                            "0. Salir\n\n" +
+                            "Seleccione una opción:"
+            ));
             switch (opcion) {
                 case 1:
-                    JOptionPane.showMessageDialog(null,"Esta sección está en desarrollo. Volviendo al menú principal.");
+                    agregarProductoInventario();
                     break;
+
                 case 2:
-                    menuAdministrador();
+                    mostrarInventario();
+                    break;
+
+                case 3:
+                    registrarCliente();
+                    break;
+
+                case 4:
+                    atenderCliente();
+                    break;
+
+                case 0:
+                    JOptionPane.showMessageDialog(null, "Saliendo del sistema.");
+                    break;
+
+                default:
+                    JOptionPane.showMessageDialog(null, "Opción inválida.");
                     break;
             }
-
         } while (opcion != 0);
     }
 
-    public static void menuCliente() {
-        //En desarrollo
+    public static void agregarProductoInventario() {
+
+        String nombre = JOptionPane.showInputDialog("Nombre del producto:");
+        double precio = Double.parseDouble(JOptionPane.showInputDialog("Precio unitario del producto:"));
+        String categoria = JOptionPane.showInputDialog("Categoría del producto:");
+        String fechaVencimiento = JOptionPane.showInputDialog("Fecha de vencimiento:");
+        int cantidad = Integer.parseInt(JOptionPane.showInputDialog("Cantidad disponible en inventario:"));
+
+        NodoProducto producto = new NodoProducto(nombre, precio, categoria, fechaVencimiento, cantidad);
+        tienda.agregarProductoInventario(producto);
+        JOptionPane.showMessageDialog(null, "Producto agregado al inventario correctamente.");
     }
 
-    public static void menuAdministrador() {
-        int opcionAdmin;
-        do {
-            opcionAdmin = Integer.parseInt(JOptionPane.showInputDialog(
-                    "MENÚ ADMINISTRADOR\n\n" + "1. Agregar producto al inicio de la lista\n" + "2. Agregar producto al final de la lista\n" +
-                            "3. Mostrar todos los productos\n" + "4. Buscar producto\n" +
-                            "5. Modificar producto\n" + "6. Agregar imagen a un producto\n" +
-                            "7. Eliminar producto\n" + "8. Reporte de costos totales\n" + "0. Volver al menú principal\n"));
+    public static void mostrarInventario() {
+        tienda.mostrarInventario();
+    }
 
-            if (opcionAdmin == 1) {
-                String nombre = JOptionPane.showInputDialog("Nombre del producto: ");
-                double precio = Double.parseDouble(JOptionPane.showInputDialog("Precio unitario del producto: "));
-                String categoria = JOptionPane.showInputDialog("Categoría del producto: ");
-                String fechaVencimiento = JOptionPane.showInputDialog("Fecha de vencimiento del producto: ");
-                int cantidad = Integer.parseInt(JOptionPane.showInputDialog("Número de unidades que se van a almacenar: "));
-                aplicacion.insertarInicio(nombre, precio, categoria, fechaVencimiento, cantidad);
-            }
-            if (opcionAdmin == 2) {
-                String nombre = JOptionPane.showInputDialog("Nombre del producto: ");
-                double precio = Double.parseDouble(JOptionPane.showInputDialog("Precio unitario del producto: "));
-                String categoria = JOptionPane.showInputDialog("Categoría del producto: ");
-                String fechaVencimiento = JOptionPane.showInputDialog("Fecha de vencimiento del producto: ");
-                int cantidad = Integer.parseInt(JOptionPane.showInputDialog("Número de unidades que se van a almacenar: "));
-                aplicacion.insertarFinal(nombre, precio, categoria, fechaVencimiento, cantidad);
-            }
-            if (opcionAdmin == 3) {
-                aplicacion.mostrarProductos();
-            }
-            if (opcionAdmin == 4) {
-                String nombre = JOptionPane.showInputDialog("Nombre del producto que desea buscar: ");
-                NodoProducto temp = aplicacion.buscarProducto(nombre);
-                if (temp != null){
-                    if (temp.getListaImagenes().isEmpty()){
-                        JOptionPane.showMessageDialog(null,"\nNombre: " + temp.getNombre() + "\nPrecio: " + temp.getPrecio() +
-                                "\nCategoria: " + temp.getCategoria()+ "\nFecha vencimiento: " + temp.getFechaVencimiento() +
-                                "\nCantidad: " + temp.getCantidad() + "\nNo hay imagenes adjuntas del producto.");
-                    }else {
-                        JOptionPane.showMessageDialog(null, "\nNombre: " + temp.getNombre() + "\nPrecio: " + temp.getPrecio() +
-                                "\nCategoria: " + temp.getCategoria() + "\nFecha vencimiento: " + temp.getFechaVencimiento() +
-                                "\nCantidad: " + temp.getCantidad() + "\nImagenes: " + temp.getListaImagenes());
-                    }
+    public static void registrarCliente() {
+        String nombreCliente = JOptionPane.showInputDialog("Nombre del cliente:");
+
+        int prioridad = Integer.parseInt(JOptionPane.showInputDialog(
+                "Prioridad del cliente:\n\n" +
+                        "1. Básico\n" +
+                        "2. Afiliado\n" +
+                        "3. Premium"
+        ));
+
+        if (prioridad < 1 || prioridad > 3) {
+            JOptionPane.showMessageDialog(null, "La prioridad debe estar entre 1 y 3.");
+            return;
+        }
+
+        Cliente cliente = new Cliente(nombreCliente, prioridad);
+
+        int agregarMas;
+
+        do {
+            String nombreProducto = JOptionPane.showInputDialog("Nombre del producto que desea agregar al carrito:");
+            NodoProducto productoInventario = tienda.buscarProductoInventario(nombreProducto);
+            if (productoInventario == null) {
+                JOptionPane.showMessageDialog(null, "El producto no existe en el inventario.");
+            } else {
+                int cantidad = Integer.parseInt(JOptionPane.showInputDialog("Cantidad que desea agregar al carrito:"));
+                if (cantidad <= 0) {
+                    JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor a 0.");
+                } else {
+                    cliente.agregarProducto(productoInventario, cantidad);
+                    JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
                 }
             }
-            if (opcionAdmin == 5) {
-                String nombreViejo = JOptionPane.showInputDialog("Nombre del producto que desea modificar: ");
+            agregarMas = JOptionPane.showConfirmDialog(
+                    null,
+                    "¿Desea agregar otro producto al carrito?",
+                    "Carrito",
+                    JOptionPane.YES_NO_OPTION
+            );
+        } while (agregarMas == JOptionPane.YES_OPTION);
+        tienda.registrarCliente(cliente);
+        JOptionPane.showMessageDialog(null, "Cliente registrado en la cola correctamente.");
+    }
 
-                aplicacion.modificarProducto(nombreViejo);
-            }
-            if (opcionAdmin == 6) {
-                String nombre = JOptionPane.showInputDialog("Nombre del producto al que desea adjuntar una imagen: ");
-                String ruta = JOptionPane.showInputDialog("Ruta donde se almacena la imagen: ");
-                aplicacion.agregarImagenAProducto(nombre, ruta);
-            }
-            if (opcionAdmin == 7) {
-                String nombre = JOptionPane.showInputDialog("Nombre del producto que desea eliminar: ");
-                aplicacion.eliminarProducto(nombre);
-            }
-            if (opcionAdmin == 8) {
-                aplicacion.mostrarReporteCostos();
-            }
-        }while (opcionAdmin != 0);
+    public static void atenderCliente() {
+        Cliente cliente = tienda.atenderSiguienteCliente();
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(null, "No hay clientes en la cola.");
+            return;
+        }
+        cliente.mostrarFactura();
     }
 }
-
