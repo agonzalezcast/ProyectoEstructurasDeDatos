@@ -22,8 +22,8 @@ public class Tienda {
         return nodo.getProducto();
     }
 
-    public void mostrarInventario() {
-        inventario.enOrden();
+    public String mostrarInventario() {
+        return inventario.obtenerInventario();
     }
 
     public void registrarCliente(Cliente cliente) {

@@ -91,18 +91,32 @@ public class ArbolProductos {
         }
     }
 
+    private void enOrdenRec(NodoArbol raiz, StringBuilder texto) {
+        if (raiz != null) {
+            enOrdenRec(raiz.getIzq(), texto);
+            NodoProducto producto = raiz.getProducto();
 
-    private void enOrdenRec(NodoArbol raiz){
-        if (raiz != null){
-            enOrdenRec(raiz.getIzq());
-            System.out.print(raiz.getProducto().getNombre() + " ");
-            enOrdenRec(raiz.getDer());
+            texto.append("Nombre: ").append(producto.getNombre()).append("\n");
+            texto.append("Precio: ").append(producto.getPrecio()).append("\n");
+            texto.append("Categoría: ").append(producto.getCategoria()).append("\n");
+            texto.append("Fecha de vencimiento: ").append(producto.getFechaVencimiento()).append("\n");
+            texto.append("Cantidad: ").append(producto.getCantidad()).append("\n");
+            texto.append("-----------------------------\n");
+
+            enOrdenRec(raiz.getDer(), texto);
         }
     }
 
-    public void enOrden(){
-        enOrdenRec(raiz);
-        System.out.println("\n");
+    public String obtenerInventario() {
+        if (estaVacio()) {
+            return "El inventario está vacío.";
+        }
+
+        StringBuilder texto = new StringBuilder();
+        texto.append("===== INVENTARIO =====\n\n");
+        enOrdenRec(raiz, texto);
+        return texto.toString();
+
     }
 
     private void preOrdenRec(NodoArbol raiz){

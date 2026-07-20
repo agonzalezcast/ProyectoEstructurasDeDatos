@@ -13,9 +13,12 @@ public class Main {
     }
 
     public static void menu() {
-        int opcion;
+
+        int opcion = -1;
+
         do {
-            opcion = Integer.parseInt(JOptionPane.showInputDialog(
+
+            String entrada = JOptionPane.showInputDialog(
                     "SISTEMA DE GESTIÓN DE INVENTARIOS\n\n" +
                             "1. Agregar producto al inventario\n" +
                             "2. Mostrar inventario\n" +
@@ -23,28 +26,42 @@ public class Main {
                             "4. Atender siguiente cliente\n" +
                             "0. Salir\n\n" +
                             "Seleccione una opción:"
-            ));
+            );
+
+            if (entrada == null) {
+                opcion = 0;
+                JOptionPane.showMessageDialog(null, "Saliendo del sistema.");
+                break;
+            }
+
+            if (entrada.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar una opción.");
+                continue;
+            }
+
+            try {
+                opcion = Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Debe ingresar un número válido.");
+                continue;
+            }
+
             switch (opcion) {
                 case 1:
                     agregarProductoInventario();
                     break;
-
                 case 2:
                     mostrarInventario();
                     break;
-
                 case 3:
                     registrarCliente();
                     break;
-
                 case 4:
                     atenderCliente();
                     break;
-
                 case 0:
                     JOptionPane.showMessageDialog(null, "Saliendo del sistema.");
                     break;
-
                 default:
                     JOptionPane.showMessageDialog(null, "Opción inválida.");
                     break;
@@ -66,7 +83,7 @@ public class Main {
     }
 
     public static void mostrarInventario() {
-        tienda.mostrarInventario();
+        JOptionPane.showMessageDialog(null, tienda.mostrarInventario());
     }
 
     public static void registrarCliente() {
