@@ -1,11 +1,12 @@
 package gestionInventario;
 
+import javax.swing.*;
+
 public class Cliente {
     private String nombre;
-    private int prioridad; // 1: básico, 2: afiliado, 3: premium
+    private int prioridad;
     private ListaProductos carrito;
 
-    //Constructor
     public Cliente(String nombre, int prioridad){
         this.nombre = nombre;
         this.prioridad = prioridad;
@@ -38,15 +39,16 @@ public class Cliente {
 
     public void agregarProducto(NodoProducto producto, int cantidad){
         if (producto == null){
-            System.out.println("El producto no existe en el inventario.");
+            JOptionPane.showMessageDialog(null, "El producto no existe en el inventario.");
             return;
         }
+
         carrito.insertarFinal(producto.getNombre(), producto.getPrecio(), producto.getCategoria(),
                 producto.getFechaVencimiento(), cantidad);
     }
 
     public void mostrarFactura(){
-        System.out.println("Factura de " + nombre + ":");
+        JOptionPane.showMessageDialog(null, "Factura de " + nombre + ":");
         carrito.mostrarReporteCostos();
     }
 }
