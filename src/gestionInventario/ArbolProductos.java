@@ -113,7 +113,7 @@ public class ArbolProductos {
         }
 
         StringBuilder texto = new StringBuilder();
-        texto.append("===== INVENTARIO =====\n\n");
+        texto.append("INVENTARIO\n");
         enOrdenRec(raiz, texto);
         return texto.toString();
 
